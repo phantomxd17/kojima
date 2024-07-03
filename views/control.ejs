@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>شركة كودجيما</title>
+    <link rel="stylesheet" href="/css/master.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .control-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1em;
+      }
+
+      .control {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+        padding: 2em;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5em;
+      }
+
+      .project-card {
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .project-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .project-card img {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+
+      .newCard img {
+        object-fit: contain;
+      }
+    </style>
+  </head>
+  <body>
+    <% if (message) { %>
+    <div class="message">
+      <div class="alert-bar"><%= message %></div>
+    </div>
+    <% } %>
+    <header class="headCon">
+      <h1>صفحة التحكم</h1>
+    </header>
+
+    <div class="control-container">
+      <div class="control">
+        <div class="content">
+          <div id="addCard" class="project-card newCard">
+            <img src="/photo/add.png" alt="إضافة" />
+            <h3>إضافة عقار جديد</h3>
+          </div>
+          <div class="project-card">
+            <a
+              href="/control/buildView"
+              class="view-build newCard"
+              id="view-build"
+            >
+              <img src="/photo/enhanced.jpg" alt="شاهد" />
+              <h3>العقارات الحالية</h3>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="addBuildModal" class="modal">
+      <div class="modal-content">
+        <div style="display: flex">
+          <span class="close">&times;</span>
+          <h2>إضافة عقار جديد</h2>
+        </div>
+        <form
+          action="/addBuild"
+          method="post"
+          enctype="multipart/form-data"
+          id="addBuildForm"
+        >
+          <label for="name">اسم العقار:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            autocomplete="name"
+            required
+          />
+
+          <label for="imageFile">صورة العقار:</label>
+          <input
+            type="file"
+            id="imageFile"
+            name="imageFile"
+            accept="image/*"
+            required
+          />
+
+          <label for="apartmentDetails">تفاصيل الشقة:</label>
+          <input
+            type="text"
+            id="apartmentDetails"
+            name="apartmentDetails"
+            required
+          />
+
+          <label for="apartmentSize">مساحة الشقة:</label>
+          <input
+            type="number"
+            min="0"
+            id="apartmentSize"
+            name="apartmentSize"
+            required
+          />
+
+          <label for="location">الموقع:</label>
+          <input type="text" id="location" name="location" required />
+
+          <label for="numberOfApartment">عدد الشقق:</label>
+          <input
+            type="number"
+            min="0"
+            id="numberOfApartment"
+            name="numberOfApartment"
+            required
+          />
+
+          <label for="filesUrl">فيديوهات وصور العقار:</label>
+          <input
+            type="file"
+            id="filesUrl"
+            name="filesUrl"
+            accept="image/*, video/*"
+            multiple
+            required
+          />
+
+          <button type="submit">إضافة</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the modal element
+        const modal = document.getElementById("addBuildModal");
+
+        // Get the button that opens the modal
+        const btn = document.getElementById("addCard");
+
+        // Get the <span> element that closes the modal
+        const span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function (event) {
+          event.preventDefault();
+          modal.style.display = "block";
+        };
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+          modal.style.display = "none";
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        };
+      });
+    </script>
+  </body>
+</html>

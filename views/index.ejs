@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>شركة كودجيما</title>
+    <link rel="stylesheet" href="/css/master.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- شريط التنقل -->
+    <%- include('./components/header.ejs') %>
+
+    <!-- القسم الرئيسي -->
+    <section id="home">
+      <img src="/photo/enhanced.jpg" alt="Logo" class="logo" />
+    </section>
+
+    <!-- قسم عن الشركة -->
+
+    <section class="services" id="about">
+      <h1 class="section-title">عن الشركة</h1>
+      <div class="service">
+        <div class="service-text">
+          <h2>نبذة عن الشركة</h2>
+          <p>
+            شركة كودجيما للاستثمار والتطوير العقاري الشركة الرائدة في الاستثمار
+            والتسويق والتطوير العقاري في مدينة بدر محافظة القاهرة
+          </p>
+          <p>
+            نشأت الشركة في عام ٢٠١٠ وبدأت برأس مال ٢٠ مليون جنيه وأصبحت الشركة
+            في تطور ملحوظ. بمرور الوقت حتى أصبحت علامة مميزة في مدينة بدر
+          </p>
+          <p>
+            تمتلك الشركة اكتر من وحدة سكنية و ١٥ قطعة معمارية واكثر من ٤ مولات
+          </p>
+          <p>المقر الأول للشركة / عمارة ٢ الحي الأول أمام بنك</p>
+          <p>المقر الثاني للشركة / أمام الجامعة الروسية مباشرة</p>
+        </div>
+        <img src="/photo/location1.jpg" alt="Signing a contract" />
+      </div>
+      <div class="service reverse">
+        <div class="service-text">
+          <h2>أعضاء مجلس إدارة الشركة</h2>
+          <p>م / أسامة فايق عبدربه</p>
+          <p>م / أيمن فايق عبدربه</p>
+          <p>م / أحمد فايق عبدربه</p>
+          <p>م / اسلام نادى حبيش</p>
+          <p>م / محمد</p>
+          <p>م / حسين</p>
+        </div>
+        <img src="/photo/location2.jpg" alt="House" />
+      </div>
+    </section>
+
+    <!-- قسم مشاريعنا -->
+    <section id="projects">
+      <h2>مشاريعنا</h2>
+      <div class="projects-grid">
+        <% builds.forEach(build => { %>
+        <div class="project-card">
+          <a href="/builds?build=<%= build.id %>">
+            <img src="<%= build.imageUrl %>" alt="<%= build.name %>" />
+            <h3><%= build.name %></h3>
+          </a>
+        </div>
+        <% }); %>
+      </div>
+    </section>
+    <%- include('./components/footer.ejs') %>
+  </body>
+</html>

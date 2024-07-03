@@ -1,0 +1,21 @@
+{
+  "name": "web",
+  "description": "Before you begin, ensure you have the following installed:",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "start": "node app.js",
+    "watch": "nodemon --ext *"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.2.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.4",
+    "path": "^0.12.7"
+  }
+}

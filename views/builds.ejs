@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>شركة كودجيما</title>
+    <link rel="stylesheet" href="/css/master.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- شريط التنقل -->
+    <%- include('./components/header.ejs') %>
+
+    <!-- قسم عن الشركة -->
+    <section id="about" class="about-section">
+      <div class="about-content">
+        <div id="video-carousel">
+          <!-- Add a container for the video elements -->
+          <div id="video-container">
+            <% build.listUrls.forEach((url, index) => { %> <% if
+            (url.includes('.MOV')) { %>
+            <video
+              class="video"
+              src="<%= url %>"
+              controls
+              autoplay
+              muted
+            ></video>
+            <% } else { %>
+            <img class="photo" src="<%= url %>" alt="Build Image" />
+            <% } %> <% }) %>
+          </div>
+          <!-- Add navigation buttons -->
+          <button id="prev-btn">Previous</button>
+          <button id="next-btn">Next</button>
+        </div>
+        <div class="about-text">
+          <h2><%= build.name %></h2>
+          <p><%= build.location %></p>
+          <p>القطعه مكونه من <%= build.numberOfApartment %> شقق</p>
+          <p>مساحة الشقه <%= build.apartmentSize %> م²</p>
+          <p>الشقه تتكون من (<%= build.apartmentDetails %>)</p>
+        </div>
+      </div>
+    </section>
+
+    <%- include('./components/footer.ejs') %>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const videos = document.querySelectorAll(".video, .photo");
+        let currentIndex = 0;
+
+        function showVideo(index) {
+          videos.forEach((video, i) => {
+            video.style.transform = `translateX(${-100 * (i - index)}%)`;
+          });
+        }
+
+        document
+          .getElementById("prev-btn")
+          .addEventListener("click", function () {
+            currentIndex =
+              currentIndex === 0 ? videos.length - 1 : currentIndex - 1;
+            showVideo(currentIndex);
+          });
+
+        document
+          .getElementById("next-btn")
+          .addEventListener("click", function () {
+            currentIndex =
+              currentIndex === videos.length - 1 ? 0 : currentIndex + 1;
+            showVideo(currentIndex);
+          });
+
+        showVideo(currentIndex);
+      });
+    </script>
+  </body>
+</html>

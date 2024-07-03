@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>شركة كودجيما</title>
+    <link rel="stylesheet" href="/css/master.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .control-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2em;
+      }
+
+      .build-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 1.5em;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .build-card img {
+        max-width: 100%;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .build-info {
+        padding: 1em;
+      }
+
+      .build-info h3 {
+        margin: 0 0 0.5em 0;
+      }
+
+      .build-info p {
+        margin: 0.5em 0;
+      }
+
+      .build-info .buttons {
+        margin-top: 1em;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .buttons button {
+        background-color: #4caf50;
+        color: white;
+        padding: 0.5em 1em;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .buttons button:hover {
+        background-color: #45a049;
+      }
+
+      .buttons .delete-button {
+        background-color: #f44336;
+      }
+
+      .buttons .delete-button:hover {
+        background-color: #e53935;
+      }
+
+      .media-list {
+        margin-top: 1em;
+      }
+
+      .media-list a {
+        display: block;
+        color: #4caf50;
+        margin: 0.2em 0;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .media-list a:hover {
+        color: #45a049;
+      }
+
+      .media-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.5em;
+      }
+
+      .media-item a {
+        flex-grow: 1;
+      }
+
+      .media-item span {
+        margin-left: 1em;
+        color: #666;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body class="bodyCon">
+    <% if (message) { %>
+    <div class="message">
+      <div class="alert-bar"><%= message %></div>
+    </div>
+    <% } %>
+    <header class="headCon">
+      <a href="/control">رجوع</a>
+      <h1>صفحة التحكم</h1>
+    </header>
+
+    <div class="control-container">
+      <% builds.forEach(build => { %>
+      <div class="build-card">
+        <img src="<%= build.imageUrl %>" alt="<%= build.name %>" />
+        <div class="build-info">
+          <h3><%= build.name %></h3>
+          <p>تفاصيل الشقة: <%= build.apartmentDetails %></p>
+          <p>مساحة الشقة: <%= build.apartmentSize %> م²</p>
+          <p>الموقع: <%= build.location %></p>
+          <p>عدد الشقق: <%= build.numberOfApartment %></p>
+          <div class="media-list">
+            <h4>فيديوهات وصور العقار:</h4>
+            <% build.listUrls.forEach(url => { %>
+            <div class="media-item">
+              <a
+                href="<%= url.includes('.MOV') ? '/play?url=' + encodeURIComponent(url) : url %>"
+                target="_blank"
+                >عرض الملف</a
+              >
+              <span><%= url.includes('.MOV') ? 'فيديو' : 'صورة' %></span>
+              <button
+                class="modify-media-button"
+                data-url="<%= url %>"
+                data-ID="<%= build.id %>"
+              >
+                تعديل
+              </button>
+              <button
+                class="delete-media-button"
+                data-url="<%= url %>"
+                data-ID="<%= build.id %>"
+              >
+                حذف
+              </button>
+            </div>
+            <% }) %>
+          </div>
+          <div class="buttons">
+            <button
+              class="modify-button"
+              data-id="<%= build.id %>"
+              data-name="<%= build.name %>"
+              data-apartment-details="<%= build.apartmentDetails %>"
+              data-apartment-size="<%= build.apartmentSize %>"
+              data-location="<%= build.location %>"
+              data-number-of-apartment="<%= build.numberOfApartment %>"
+              data-list-urls="<%= JSON.stringify(build.listUrls) %>"
+            >
+              تعديل
+            </button>
+            <button class="delete-button" data-id="<%= build.id %>">حذف</button>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <div id="modifyMediaModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>تعديل الفيديو أو الصورة</h2>
+        <form
+          id="modifyMediaForm"
+          action="/modifyMedia"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" id="mediaUrl" name="mediaUrl" />
+          <input type="hidden" id="modMeddiaId" name="modMeddiaId" />
+          <label for="newMediaFile">اختر ملف جديد:</label>
+          <input
+            type="file"
+            id="newMediaFile"
+            name="newMediaFile"
+            accept="image/*, video/*"
+          />
+          <button type="submit">تعديل</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Media Modal -->
+    <div id="deleteMediaModal" class="modal">
+      <div class="modal-content">
+        <form action="/deleteMedia" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="delMediaUrl" id="delMediaUrl" />
+          <input type="hidden" name="delMeddiaId" id="delMeddiaId" />
+          <span class="close">&times;</span>
+          <h2>هل أنت متأكد أنك تريد حذف هذا الملف؟</h2>
+          <button type="submit">نعم</button>
+          <button id="cancelDeleteMedia">إلغاء</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modify Modal -->
+    <div id="modifyModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>تعديل العقار</h2>
+        <form
+          id="modifyForm"
+          action="/modifyBuild"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" id="modifyId" name="id" />
+          <label for="modifyName">اسم العقار:</label>
+          <input
+            type="text"
+            id="modifyName"
+            name="name"
+            autocomplete="name"
+            required
+          />
+          <label for="modifyImageFile">صورة العقار:</label>
+          <input
+            type="file"
+            id="modifyImageFile"
+            name="imageFile"
+            accept="image/*"
+          />
+          <label for="modifyApartmentDetails">تفاصيل الشقة:</label>
+          <input
+            type="text"
+            id="modifyApartmentDetails"
+            name="apartmentDetails"
+          />
+          <label for="modifyApartmentSize">مساحةالشقة:</label>
+          <input type="number" min="0" id="modifyApartmentSize" name="apartmentSize" />
+          <label for="modifyLocation">الموقع:</label>
+          <input type="text" id="modifyLocation" name="location" />
+          <label for="modifyNumberOfApartment">عدد الشقق:</label>
+          <input
+            type="number"
+            min="0"
+            id="modifyNumberOfApartment"
+            name="numberOfApartment"
+          />
+          <label for="filesUrl">فيديوهات وصور العقار:</label>
+          <input
+            type="file"
+            id="filesUrl"
+            name="filesUrl"
+            accept="image/*, video/*"
+            multiple
+          />
+          <button type="submit">تعديل</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="modal">
+      <div class="modal-content">
+        <form action="/deleteBuild" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="delID" id="delID" />
+          <span class="close">&times;</span>
+          <h2>هل أنت متأكد أنك تريد الحذف؟</h2>
+          <button type="submit">نعم</button>
+          <button id="cancelDelete">إلغاء</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const modifyModal = document.getElementById("modifyModal");
+        const deleteModal = document.getElementById("deleteModal");
+        const modifyMediaModal = document.getElementById("modifyMediaModal");
+        const deleteMediaModal = document.getElementById("deleteMediaModal");
+
+        const modifyForm = document.getElementById("modifyForm");
+        const modifyId = document.getElementById("modifyId");
+        const modifyName = document.getElementById("modifyName");
+        const modifyApartmentDetails = document.getElementById(
+          "modifyApartmentDetails"
+        );
+        const modifyApartmentSize = document.getElementById(
+          "modifyApartmentSize"
+        );
+        const modifyLocation = document.getElementById("modifyLocation");
+        const modifyNumberOfApartment = document.getElementById(
+          "modifyNumberOfApartment"
+        );
+
+        const modifyButtons = document.querySelectorAll(".modify-button");
+        modifyButtons.forEach((button) => {
+          button.onclick = function () {
+            modifyId.value = this.getAttribute("data-id");
+            modifyName.value = this.getAttribute("data-name");
+            modifyApartmentDetails.value = this.getAttribute(
+              "data-apartment-details"
+            );
+            modifyApartmentSize.value = this.getAttribute(
+              "data-apartment-size"
+            );
+            modifyLocation.value = this.getAttribute("data-location");
+            modifyNumberOfApartment.value = this.getAttribute(
+              "data-number-of-apartment"
+            );
+            modifyModal.style.display = "block";
+          };
+        });
+
+        const deleteButtons = document.querySelectorAll(".delete-button");
+        deleteButtons.forEach((button) => {
+          button.onclick = function () {
+            const dataID = this.getAttribute("data-id");
+            document.getElementById("delID").value = dataID;
+            deleteModal.style.display = "block";
+          };
+        });
+
+        document.getElementById("cancelDelete").onclick = function () {
+          deleteModal.style.display = "none";
+        };
+
+        document.querySelectorAll(".close").forEach((span) => {
+          span.onclick = function () {
+            this.closest(".modal").style.display = "none";
+          };
+        });
+
+        window.onclick = function (event) {
+          if (
+            event.target === modifyModal ||
+            event.target === deleteModal ||
+            event.target === modifyMediaModal ||
+            event.target === deleteMediaModal
+          ) {
+            event.target.style.display = "none";
+          }
+        };
+
+        // Add event listeners for modify and delete media buttons
+        document.querySelectorAll(".modify-media-button").forEach((button) => {
+          button.onclick = function () {
+            const mediaUrl = this.getAttribute("data-url");
+            const dataID = this.getAttribute("data-ID");
+            document.getElementById("mediaUrl").value = mediaUrl;
+            document.getElementById("modMeddiaId").value = dataID;
+            modifyMediaModal.style.display = "block";
+          };
+        });
+
+        document.querySelectorAll(".delete-media-button").forEach((button) => {
+          button.onclick = function () {
+            const mediaUrl = this.getAttribute("data-url");
+            const dataID = this.getAttribute("data-ID");
+            document.getElementById("delMediaUrl").value = mediaUrl;
+            document.getElementById("delMeddiaId").value = dataID;
+            deleteMediaModal.style.display = "block";
+          };
+        });
+
+        document.getElementById("cancelDeleteMedia").onclick = function () {
+          deleteMediaModal.style.display = "none";
+        };
+      });
+    </script>
+  </body>
+</html>
