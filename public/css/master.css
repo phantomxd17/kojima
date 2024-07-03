@@ -602,11 +602,9 @@ button:hover {
     flex-direction: column;
     align-items: center;
   }
-
   .service.reverse {
     flex-direction: column;
   }
-
   .service img {
     max-width: 100%;
     margin-top: 20px;
