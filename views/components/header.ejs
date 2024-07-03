@@ -1,13 +1,33 @@
 <header>
   <nav>
     <div class="logo-container">
-      <img src="/photo/enhanced.jpg" alt="شعار شركة كودجيما" />
+      <img src="/image/enhanced.jpg" alt="شعار شركة كودجيما" />
       <span> شركة كودجيما للاستثمار والتطوير العقاري </span>
     </div>
-    <ul>
+    <ul class="main-menu">
       <li><a href="/">الرئيسية</a></li>
       <li><a href="#about">عن الشركة</a></li>
       <li><a href="#">مشاريعنا</a></li>
     </ul>
+    <div class="mega-menu" id="menu-icon">
+      <img src="/image/menu.png" alt="menu" />
+      <ul class="dropdown-menu" id="dropdown">
+        <li><a href="/">الرئيسية</a></li>
+        <li><a href="#about">عن الشركة</a></li>
+        <li><a href="#">مشاريعنا</a></li>
+      </ul>
+    </div>
   </nav>
 </header>
+<script>
+  const menuIcon = document.getElementById("menu-icon");
+  const dropdownMenu = document.getElementById("dropdown");
+
+  menuIcon.addEventListener("click", function () {
+    if (dropdownMenu.style.display === "block") {
+      dropdownMenu.style.display = "none";
+    } else {
+      dropdownMenu.style.display = "block";
+    }
+  });
+</script>

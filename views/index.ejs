@@ -13,6 +13,21 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="shortcut icon" href="" />
+    <link rel="icon" sizes="128x128" href="/image/enhancedicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.7/themes/odometer-theme-default.css"
+      integrity="sha512-kMPqFnKueEwgQFzXLEEl671aHhQqrZLS5IP3HzqdfozaST/EgU+/wkM07JCmXFAt9GO810I//8DBonsJUzGQsQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.7/odometer.min.js"
+      integrity="sha512-v3fZyWIk7kh9yGNQZf1SnSjIxjAKsYbg6UQ+B+QxAZqJQLrN3jMjrdNwcxV6tis6S0s1xyVDZrDz9UoRLfRpWw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </head>
   <body>
     <!-- شريط التنقل -->
@@ -20,10 +35,25 @@
 
     <!-- القسم الرئيسي -->
     <section id="home">
-      <img src="/photo/enhanced.jpg" alt="Logo" class="logo" />
+      <img src="/image/enhanced.jpg" alt="Logo" class="logo" />
     </section>
 
     <!-- قسم عن الشركة -->
+
+    <section id="counters">
+      <div class="counter">
+        <h3>عدد العملاء</h3>
+        <p id="clients-counter">0</p>
+      </div>
+      <div class="counter">
+        <h3>عدد العمارات</h3>
+        <p id="buildings-counter">0</p>
+      </div>
+      <div class="counter">
+        <h3>عدد الوحدات السكنية</h3>
+        <p id="units-counter">0</p>
+      </div>
+    </section>
 
     <section class="services" id="about">
       <h1 class="section-title">عن الشركة</h1>
@@ -44,7 +74,7 @@
           <p>المقر الأول للشركة / عمارة ٢ الحي الأول أمام بنك</p>
           <p>المقر الثاني للشركة / أمام الجامعة الروسية مباشرة</p>
         </div>
-        <img src="/photo/location1.jpg" alt="Signing a contract" />
+        <img src="/image/location1.jpg" alt="Signing a contract" />
       </div>
       <div class="service reverse">
         <div class="service-text">
@@ -56,7 +86,7 @@
           <p>م / محمد</p>
           <p>م / حسين</p>
         </div>
-        <img src="/photo/location2.jpg" alt="House" />
+        <img src="/image/location2.jpg" alt="House" />
       </div>
     </section>
 
@@ -75,5 +105,44 @@
       </div>
     </section>
     <%- include('./components/footer.ejs') %>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const createOdometer = (el, value) => {
+          const odometer = new Odometer({
+            el: el,
+            value: 0,
+          });
+
+          let hasRun = false;
+
+          const options = {
+            threshold: [0, 0.9],
+          };
+
+          const callback = (entries, observer) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                if (!hasRun) {
+                  odometer.update(value);
+                  hasRun = true;
+                }
+              }
+            });
+          };
+
+          const observer = new IntersectionObserver(callback, options);
+          observer.observe(el);
+        };
+
+        const clients = document.getElementById("clients-counter");
+        createOdometer(clients, 8500);
+
+        const buildings = document.getElementById("buildings-counter");
+        createOdometer(buildings, 130);
+
+        const units = document.getElementById("units-counter");
+        createOdometer(units, 650);
+      });
+    </script>
   </body>
 </html>

@@ -59,15 +59,51 @@ nav ul li a {
   font-size: 18px;
   transition: color 0.3s;
   border: none;
-  border-radius: 5px; /* Rounded corners */
-  padding: 10px 20px; /* Add some padding */
-  cursor: pointer; /* Change cursor shape on hover */
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
 }
 
 nav ul li a:hover {
   text-decoration: none;
   background-color: #3e8e41;
   color: white;
+}
+
+.mega-menu {
+  display: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.mega-menu img {
+  width: 30px;
+  height: 20px;
+}
+
+.mega-menu ul {
+  background-color: white;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  left: -20px;
+}
+
+.mega-menu ul a {
+  display: block;
+  width: fit-content;
+}
+
+.mega-menu .dropdown-menu {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 120px;
+}
+.mega-menu .dropdown-menu li {
+  margin: 10px 0;
 }
 
 /* القسم الرئيسي */
@@ -164,22 +200,6 @@ body {
 /* تغيير اتجاه العناصر في القسم الثاني */
 .reverse {
   flex-direction: row-reverse;
-}
-
-@media (max-width: 768px) {
-  .service {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .service.reverse {
-    flex-direction: column;
-  }
-
-  .service img {
-    max-width: 100%;
-    margin-top: 20px;
-  }
 }
 
 /* قسم مشاريعنا */
@@ -319,23 +339,31 @@ footer {
   font-size: 0.9em;
 }
 
-/* Style the video carousel container */
-#video-carousel {
-  width: 80%; /* adjust the width to your liking */
-  margin: 40px auto; /* center the container */
-  padding: 20px;
-  background-color: #f0f0f0; /* light gray background */
-  border: 1px solid #ddd; /* light gray border */
-  border-radius: 10px; /* rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow */
+.about-content {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
 }
 
-/* Style the video container */
+#video-carousel {
+  flex-basis: 50%;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+  flex-basis: 50%;
+}
+
 #video-container {
-  position: relative; /* make it relative for absolute positioning */
-  width: 100%; /* make it full-width */
-  height: 400px; /* adjust the height to your liking */
-  overflow: hidden; /* hide the overflow */
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
 }
 
 /* Style the video elements */
@@ -506,8 +534,87 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 120px;
 }
 
 button:hover {
   background-color: #45a049;
+}
+
+#counters {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background-color: #f4f4f4;
+  margin-top: 20px;
+}
+
+.counter {
+  text-align: center;
+}
+
+.counter h3 {
+  font-size: 1.5em;
+  color: #6b8e23;
+}
+
+.counter p {
+  font-size: 2em;
+  color: #ff5733;
+  margin: 0;
+  display: inline-block;
+}
+
+#clients-counter,
+#buildings-counter,
+#units-counter {
+  direction: ltr;
+}
+
+@media (max-width: 767px) {
+  nav .logo-container span {
+    font-size: 16px;
+  }
+  .about-content {
+    flex-direction: column;
+  }
+  #video-carousel {
+    width: 90%;
+  }
+  .footer-container {
+    flex-direction: column;
+  }
+  .footer-section {
+    margin-bottom: 10px;
+    padding: 10px;
+    margin-top: 0px;
+  }
+  nav ul {
+    display: none;
+  }
+  .mega-menu {
+    display: block;
+  }
+  #counters {
+    flex-direction: column;
+  }
+  .service {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .service.reverse {
+    flex-direction: column;
+  }
+
+  .service img {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 424px) {
+  nav .logo-container span {
+    font-size: 12px;
+  }
 }
