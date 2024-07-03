@@ -306,14 +306,14 @@ footer {
 }
 
 .footer-icons a {
-  color: #00aeef;
+  color: #fff;
   margin: 0 10px;
   font-size: 1.5em;
   text-decoration: none;
 }
 
 .footer-icons a:hover {
-  color: #fff;
+  color: #00aeef;
 }
 
 .footer-icons {
@@ -321,14 +321,14 @@ footer {
 }
 
 .footer-icons a {
-  color: #00aeef;
+  color: #fff;
   margin: 0 10px;
   font-size: 1.5em;
   text-decoration: none;
 }
 
 .footer-icons a:hover {
-  color: #fff;
+  color: #00aeef;
 }
 
 .footer-copyright {
@@ -602,13 +602,16 @@ button:hover {
     flex-direction: column;
     align-items: center;
   }
+
   .service.reverse {
     flex-direction: column;
   }
+
   .service img {
     max-width: 100%;
     margin-top: 20px;
   }
+
   .projects-grid {
     grid-template-columns: repeat(1, minmax(300px, 1fr));
   }
