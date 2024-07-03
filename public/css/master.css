@@ -611,6 +611,9 @@ button:hover {
     max-width: 100%;
     margin-top: 20px;
   }
+  .projects-grid {
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
+  }
 }
 
 @media (max-width: 424px) {
