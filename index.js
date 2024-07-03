@@ -10,6 +10,8 @@ const Storage = multer.memoryStorage();
 const upload = multer({
   storage: Storage,
 });
+const { getAuth, signInWithEmailAndPassword } = require("firebase/auth");
+const { initializeApp } = require("firebase/app");
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -17,6 +19,17 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
+const firebaseConfig = {
+  apiKey: "AIzaSyDqjF1AdgIUMcsgoc3_m6w1WRlH3BvwHOo",
+  authDomain: "project5-1a5d6.firebaseapp.com",
+  projectId: "project5-1a5d6",
+  storageBucket: "project5-1a5d6.appspot.com",
+  messagingSenderId: "42130624536",
+  appId: "1:42130624536:web:ae0ab17e1f02176465736d",
+  measurementId: "G-CT0QDEEH7J",
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
 
 async function getBuilds() {
   const buildsSnapshot = await db.collection("builds").get();
@@ -62,6 +75,18 @@ const uploadFile = async (file, folderName) => {
   });
 };
 
+// Middleware to verify ID token
+const verifyIdToken = async (req, res, next) => {
+  try {
+    const idToken = req.query.id;
+    await admin.auth().verifyIdToken(idToken);
+    next();
+  } catch (error) {
+    console.error("Error verifying ID token:", error);
+    res.redirect("/login?message=Access Denied Admin Only");
+  }
+};
+
 app.get("/", async (req, res) => {
   const builds = await getBuilds();
   res.render("index", { builds: builds });
@@ -77,15 +102,38 @@ app.get("/builds", async (req, res) => {
   }
 });
 
-app.get("/control", async (req, res) => {
+app.get("/login", async (req, res) => {
   const message = req.query.message || null;
-  res.render("control", { message: message });
+  res.render("login", { message: message });
 });
 
-app.get("/control/buildView", async (req, res) => {
+app.get("/control", verifyIdToken, async (req, res) => {
+  const message = req.query.message || null;
+  const token = req.query.id;
+  res.render("control", { message: message, token: token });
+});
+
+app.post("/login", upload.none(), async (req, res) => {
+  const user = req.body;
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      user.email,
+      user.password
+    );
+    const idTokenResult = await userCredential.user.getIdTokenResult();
+
+    res.redirect(`/control?id=${idTokenResult.token}`);
+  } catch (error) {
+    res.redirect("/login?message=Wrong Email or password");
+  }
+});
+
+app.get("/control/buildView", verifyIdToken, async (req, res) => {
   const builds = await getBuilds();
   const message = req.query.message || null;
-  res.render("controlView", { builds: builds, message: message });
+  const token = req.query.id;
+  res.render("controlView", { builds: builds, message: message, token: token });
 });
 
 app.get("/play", (req, res) => {
@@ -104,6 +152,7 @@ app.post(
         apartmentSize,
         location,
         numberOfApartment,
+        token,
       } = req.body;
       const imageFile = req.files["imageFile"][0];
       const filesUrl = req.files["filesUrl"];
@@ -132,10 +181,10 @@ app.post(
 
       await db.collection("builds").add(newBuild);
 
-      res.redirect("/control?message=تم اضافة العقار بنجاح");
+      res.redirect(`/control?id=${token}&message=تم اضافة العقار بنجاح`);
     } catch (error) {
       console.error("Error adding build:", error);
-      res.redirect("/control?message=فشل في اضافة العقار");
+      res.redirect(`/control?id=${token}&message=فشل في اضافة العقار`);
     }
   }
 );
@@ -152,6 +201,7 @@ app.post(
         apartmentSize,
         location,
         numberOfApartment,
+        token,
       } = req.body;
 
       const imageFile = req.files["imageFile"]
@@ -194,17 +244,21 @@ app.post(
       // Update build data in Firestore
       await buildRef.update(updateData);
 
-      res.redirect("/control/buildView?message=تم تعديب العقار بنجاح");
+      res.redirect(
+        `/control/buildView?id=${token}&message=تم تعديل العقار بنجاح`
+      );
     } catch (error) {
       console.error("Error modifying build:", error);
-      res.redirect("/control/buildView?message=فشل في تعديل العقار");
+      res.redirect(
+        `/control/buildView?id=${token}&message=فشل في تعديل العقار`
+      );
     }
   }
 );
 
 app.post("/deleteBuild", upload.none(), async (req, res) => {
   try {
-    const { delID } = req.body;
+    const { delID,token } = req.body;
 
     // Retrieve the course document to get the URLs
     const buildsDoc = await db.collection("builds").doc(delID).get();
@@ -247,16 +301,16 @@ app.post("/deleteBuild", upload.none(), async (req, res) => {
     // Delete the build from Firestore
     await db.collection("builds").doc(delID).delete();
 
-    res.redirect("/control/buildView?message=تم مسح العقار بنجاح");
+    res.redirect(`/control/buildView?id=${token}&message=تم مسح العقار بنجاح`);
   } catch (error) {
     console.error("Error deleting build:", error);
-    res.redirect("/control/buildView?message=فشل في مسح العقار");
+    res.redirect(`/control/buildView?id=${token}&message=فشل في مسح العقار`);
   }
 });
 
 app.post("/modifyMedia", upload.single("newMediaFile"), async (req, res) => {
   try {
-    const { mediaUrl, modMeddiaId } = req.body;
+    const { mediaUrl, modMeddiaId,token } = req.body;
     const newMediaFile = req.file;
 
     const decodedUrl = decodeURIComponent(mediaUrl);
@@ -286,16 +340,16 @@ app.post("/modifyMedia", upload.single("newMediaFile"), async (req, res) => {
       await buildDocRef.update({ listUrls: updatedUrls });
     }
 
-    res.redirect("/control/buildView?message=تم تعديل الملف بنجاح");
+    res.redirect(`/control/buildView?id=${token}&message=تم تعديل الملف بنجاح`);
   } catch (error) {
     console.error("Error modifying media:", error);
-    res.redirect("/control/buildView?message=فشل في تعديل الملف");
+    res.redirect(`/control/buildView?id=${token}&message=فشل في تعديل الملف`);
   }
 });
 
 app.post("/deleteMedia", upload.none(), async (req, res) => {
   try {
-    const { delMediaUrl, delMeddiaId } = req.body;
+    const { delMediaUrl, delMeddiaId,token } = req.body;
 
     const decodedUrl = decodeURIComponent(delMediaUrl);
 
@@ -316,10 +370,10 @@ app.post("/deleteMedia", upload.none(), async (req, res) => {
       await buildDocRef.update({ listUrls: updatedUrls });
     }
 
-    res.redirect("/control/buildView?message=تم مسح الملف بنجاح");
+    res.redirect(`/control/buildView?id=${token}&message=تم مسح الملف بنجاح`);
   } catch (error) {
     console.error("Error deleting media:", error);
-    res.redirect("/control/buildView?message=فشل في مسح الملف");
+    res.redirect(`/control/buildView?id=${token}&message=فشل في مسح الملف`);
   }
 });
 
