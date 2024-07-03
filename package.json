@@ -2,11 +2,11 @@
   "name": "web",
   "description": "Before you begin, ensure you have the following installed:",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "index.js",
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "node app.js",
+    "start": "node index.js",
     "watch": "nodemon --ext *"
   },
   "dependencies": {
