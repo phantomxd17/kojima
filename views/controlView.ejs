@@ -121,7 +121,7 @@
     </div>
     <% } %>
     <header class="headCon">
-      <a href="/control">رجوع</a>
+      <a href="/control?id=<%= encodeURIComponent(token) %>">رجوع</a>
       <h1>صفحة التحكم</h1>
     </header>
 
@@ -194,6 +194,11 @@
         >
           <input type="hidden" id="mediaUrl" name="mediaUrl" />
           <input type="hidden" id="modMeddiaId" name="modMeddiaId" />
+          <input
+            type="hidden"
+            name="token"
+            value="<%= encodeURIComponent(token) %>"
+          />
           <label for="newMediaFile">اختر ملف جديد:</label>
           <input
             type="file"
@@ -212,6 +217,11 @@
         <form action="/deleteMedia" method="post" enctype="multipart/form-data">
           <input type="hidden" name="delMediaUrl" id="delMediaUrl" />
           <input type="hidden" name="delMeddiaId" id="delMeddiaId" />
+          <input
+            type="hidden"
+            name="token"
+            value="<%= encodeURIComponent(token) %>"
+          />
           <span class="close">&times;</span>
           <h2>هل أنت متأكد أنك تريد حذف هذا الملف؟</h2>
           <button type="submit">نعم</button>
@@ -232,6 +242,11 @@
           enctype="multipart/form-data"
         >
           <input type="hidden" id="modifyId" name="id" />
+          <input
+            type="hidden"
+            name="token"
+            value="<%= encodeURIComponent(token) %>"
+          />
           <label for="modifyName">اسم العقار:</label>
           <input
             type="text"
@@ -287,6 +302,11 @@
       <div class="modal-content">
         <form action="/deleteBuild" method="post" enctype="multipart/form-data">
           <input type="hidden" name="delID" id="delID" />
+          <input
+            type="hidden"
+            name="token"
+            value="<%= encodeURIComponent(token) %>"
+          />
           <span class="close">&times;</span>
           <h2>هل أنت متأكد أنك تريد الحذف؟</h2>
           <button type="submit">نعم</button>
