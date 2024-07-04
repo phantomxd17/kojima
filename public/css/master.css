@@ -299,6 +299,7 @@ footer {
 
 .footer-icons a:hover {
   color: #fff;
+  text-decoration: none;
 }
 
 .footer-icons {
@@ -334,9 +335,14 @@ footer {
 .footer-copyright {
   color: #fff;
   padding: 20px;
-  border: 2px solid #fff; /* add a white border around the image */
+  border: 2px solid #fff;
   text-align: center;
-  font-size: 0.9em;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.footer-copyright p {
+  font-family: monospace;
 }
 
 .about-content {
@@ -614,7 +620,7 @@ button:hover {
 
   .projects-grid {
     grid-template-columns: repeat(1, minmax(300px, 1fr));
-    margin: 20px;
+    margin: 10px;
   }
 
   #home img {
