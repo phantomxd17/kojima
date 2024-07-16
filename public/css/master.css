@@ -133,7 +133,7 @@ nav ul li a:hover {
 #about h2,
 #projects h2 {
   font-size: 36px;
-  margin-bottom: 20px;
+  margin-block: 20px;
   color: #6b8e23;
 }
 
@@ -165,7 +165,7 @@ body {
 .section-title {
   text-align: center;
   color: #6b8e23;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   font-size: 2em;
 }
 
@@ -174,10 +174,6 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 40px;
-}
-
-.service-text {
-  max-width: 50%;
 }
 
 .service img {
@@ -197,12 +193,6 @@ body {
   color: #333;
 }
 
-/* تغيير اتجاه العناصر في القسم الثاني */
-.reverse {
-  flex-direction: row-reverse;
-}
-
-/* قسم مشاريعنا */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(300px, 1fr));
