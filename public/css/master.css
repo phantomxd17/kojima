@@ -169,13 +169,6 @@ body {
   font-size: 2em;
 }
 
-.service {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 40px;
-}
-
 .service img {
   max-width: 45%;
   height: auto;
